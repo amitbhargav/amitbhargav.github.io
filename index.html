@@ -66,41 +66,13 @@
 }
 
 /* ===========================================
-   ACCENT THEMES  -  set via <html data-theme="...">
-   Swap the default below, or change the data-theme
-   attribute on the <html> tag to lock one in.
+   ACCENT — bordeaux (fixed)
 =========================================== */
 [data-theme="bordeaux"]{
   --acc:#7A2A38; --acc2:#9E3346; --acc3:#C75365;
   --acc-rgb:199,83,101; --acc-rgb-deep:122,42,56;
   --accs:rgba(122,42,56,0.07); --accm:rgba(122,42,56,0.18);
 }
-[data-theme="cobalt"]{
-  --acc:#1E3FA8; --acc2:#2B57C9; --acc3:#5A85EA;
-  --acc-rgb:90,133,234; --acc-rgb-deep:30,63,168;
-  --accs:rgba(30,63,168,0.07); --accm:rgba(30,63,168,0.18);
-}
-[data-theme="terracotta"]{
-  --acc:#A8442A; --acc2:#C2562F; --acc3:#DB7E4E;
-  --acc-rgb:219,126,78; --acc-rgb-deep:168,68,42;
-  --accs:rgba(168,68,42,0.07); --accm:rgba(168,68,42,0.18);
-}
-[data-theme="graphite"]{
-  --acc:#2C3E52; --acc2:#3C5572; --acc3:#6989A8;
-  --acc-rgb:105,137,168; --acc-rgb-deep:44,62,82;
-  --accs:rgba(44,62,82,0.07); --accm:rgba(44,62,82,0.18);
-}
-
-/* Theme switcher control (topbar) */
-.theme-sw { display:flex; align-items:center; gap:8px; padding-right:4px; }
-.theme-sw-lbl { font-family:var(--mono); font-size:0.56rem; color:var(--ink5); letter-spacing:0.14em; text-transform:uppercase; }
-.sw { width:15px; height:15px; border-radius:50%; border:1.5px solid var(--border3); cursor:pointer; padding:0; transition:transform 0.15s, box-shadow 0.15s; position:relative; }
-.sw:hover { transform:scale(1.18); }
-.sw.on { box-shadow:0 0 0 2px var(--paper), 0 0 0 3.5px var(--ink); }
-.sw-bordeaux{ background:#9E3346; }
-.sw-cobalt{ background:#2B57C9; }
-.sw-terracotta{ background:#C2562F; }
-.sw-graphite{ background:#3C5572; }
 
 /* -- RESET ----------------------------------- */
 *,*::before,*::after { margin:0; padding:0; box-sizing:border-box }
@@ -606,7 +578,6 @@ body::after {
   .sb-copy{display:none}
   .topbar,.content{grid-column:1}
   .topbar{padding:0 18px}
-  .theme-sw-lbl{display:none}
   .panel{padding:24px 20px}
   .sk-grid,.cert-grid,.edu-grid{grid-template-columns:1fr}
   .kpi-band{grid-template-columns:repeat(2,1fr)} .kpi{border-right:none;border-bottom:1px solid var(--border2)}
@@ -614,10 +585,158 @@ body::after {
   .exp-row::before,.exp-row::after{display:none}
   .el{text-align:left;padding-right:0;margin-bottom:4px}
   .er{padding-left:0}
+  .jv-panel{width:calc(100vw - 28px);right:14px;bottom:78px;height:70vh}
+  .jv-launcher{right:16px;bottom:16px}
 }
+
+/* ============================================
+   ONBOARDING INTRO OVERLAY
+============================================ */
+.intro-ov{
+  position:fixed; inset:0; z-index:900; display:flex; align-items:center; justify-content:center;
+  flex-direction:column; text-align:center; padding:24px;
+  background:radial-gradient(120% 90% at 50% 0%, #16263c 0%, #0B1522 55%, #070E17 100%);
+  transition:opacity 0.5s ease, visibility 0.5s ease;
+}
+.intro-ov.out{ opacity:0; pointer-events:none }
+.intro-radar{ position:relative; width:120px; height:120px; margin-bottom:22px; display:flex; align-items:center; justify-content:center }
+.intro-rr{ position:absolute; border-radius:50%; border:1px solid rgba(var(--acc-rgb),0.35); animation:introPing 2.8s ease-out infinite }
+.intro-rr.r1{ width:40px; height:40px; animation-delay:0s }
+.intro-rr.r2{ width:40px; height:40px; animation-delay:0.7s }
+.intro-rr.r3{ width:40px; height:40px; animation-delay:1.4s }
+@keyframes introPing{ 0%{ width:40px; height:40px; opacity:0.9 } 100%{ width:140px; height:140px; opacity:0 } }
+.intro-core{ width:52px; height:52px; border-radius:50%; background:radial-gradient(circle at 35% 30%, var(--acc3), var(--acc) 70%); display:flex; align-items:center; justify-content:center; box-shadow:0 0 30px rgba(var(--acc-rgb),0.5) }
+.intro-core span{ width:10px; height:10px; border-radius:50%; background:#fff; animation:jvGlow 1.6s ease-in-out infinite }
+.intro-content{ max-width:560px }
+.intro-eyebrow{ font-family:var(--mono); font-size:0.66rem; letter-spacing:0.14em; text-transform:uppercase; color:#3FD17E; margin-bottom:16px }
+.intro-headline{ font-family:var(--serif); font-weight:300; font-size:clamp(1.8rem,4vw,3rem); color:#fff; min-height:1.3em; margin-bottom:14px; letter-spacing:-0.01em }
+.intro-headline::after{ content:'|'; animation:jvBlink 0.9s step-end infinite; opacity:0.7 }
+.intro-sub{ font-family:var(--sans); font-weight:300; font-size:0.95rem; line-height:1.65; color:#b7c4d4; max-width:460px; margin:0 auto 30px }
+.intro-chips{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-bottom:22px }
+.intro-chip{ font-family:var(--sans); font-size:0.8rem; font-weight:500; color:#e6ecf2; background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.14); border-radius:24px; padding:11px 18px; cursor:pointer; transition:all 0.15s }
+.intro-chip:hover{ border-color:var(--acc3); background:rgba(var(--acc-rgb),0.14); transform:translateY(-1px) }
+.intro-enter{ font-family:var(--mono); font-size:0.72rem; letter-spacing:0.06em; color:#8a99ab; background:none; border:none; cursor:pointer;
+  text-decoration:underline; text-underline-offset:4px; padding:6px }
+.intro-enter:hover{ color:#fff }
+.intro-step{ animation:introStepIn 0.4s ease }
+@keyframes introStepIn{ from{ opacity:0; transform:translateY(8px) } to{ opacity:1; transform:none } }
+.intro-navgrid{ display:grid; grid-template-columns:repeat(3,1fr); gap:9px; margin-bottom:22px; max-width:480px; margin-left:auto; margin-right:auto }
+.intro-navbtn{ font-family:var(--sans); font-size:0.76rem; font-weight:500; color:#e6ecf2; background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.13); border-radius:10px; padding:14px 8px; cursor:pointer; transition:all 0.15s;
+  display:flex; flex-direction:column; align-items:center; gap:6px; position:relative }
+.intro-navbtn:hover{ border-color:var(--acc3); background:rgba(var(--acc-rgb),0.14); transform:translateY(-2px) }
+.intro-navbtn .ic{ font-size:1.15rem }
+.intro-navbtn.rec::after{ content:'recommended'; position:absolute; top:-8px; right:-6px; font-family:var(--mono); font-size:0.5rem;
+  letter-spacing:0.04em; text-transform:uppercase; background:var(--acc3); color:#1a0a0d; padding:2px 6px; border-radius:8px }
+@media(max-width:600px){ .intro-radar{ width:90px; height:90px } .intro-chips{ flex-direction:column; align-items:stretch }
+  .intro-navgrid{ grid-template-columns:repeat(2,1fr) } }
+
+/* ============================================
+   A.I. — AMIT INTELLIGENCE WIDGET
+============================================ */
+.jv-launcher{
+  position:fixed; right:26px; bottom:26px; z-index:500;
+  width:58px; height:58px; border-radius:50%; border:none; cursor:pointer;
+  background:radial-gradient(circle at 35% 30%, var(--acc3), var(--acc) 60%, var(--acc-deep,#3a1018) 100%);
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 0 0 0 rgba(var(--acc-rgb),0.55), 0 6px 18px rgba(13,27,46,0.35);
+  animation:jvPulse 2.6s ease-out infinite;
+}
+.jv-launcher:hover{ transform:scale(1.06) }
+.jv-launcher svg{ width:26px; height:26px; fill:#fff; position:relative; z-index:2 }
+.jv-launcher .jv-dot{ position:absolute; top:4px; right:4px; width:10px; height:10px; border-radius:50%; background:#3FD17E; border:2px solid var(--paper); }
+@keyframes jvPulse{
+  0%{ box-shadow:0 0 0 0 rgba(var(--acc-rgb),0.55), 0 6px 18px rgba(13,27,46,0.35) }
+  70%{ box-shadow:0 0 0 16px rgba(var(--acc-rgb),0), 0 6px 18px rgba(13,27,46,0.35) }
+  100%{ box-shadow:0 0 0 0 rgba(var(--acc-rgb),0), 0 6px 18px rgba(13,27,46,0.35) }
+}
+
+.jv-panel{
+  position:fixed; right:26px; bottom:96px; z-index:501;
+  width:360px; height:520px; max-height:74vh;
+  background:linear-gradient(180deg,#0B1522,#0D1B2E 40%,#0A1420);
+  border:1px solid rgba(var(--acc-rgb),0.35);
+  border-radius:12px; overflow:hidden; display:none; flex-direction:column;
+  box-shadow:0 20px 60px rgba(0,0,0,0.45), 0 0 40px rgba(var(--acc-rgb),0.15);
+  font-family:var(--sans);
+}
+.jv-panel.on{ display:flex; animation:jvOpen 0.24s ease }
+@keyframes jvOpen{ from{ opacity:0; transform:translateY(14px) scale(0.98) } to{ opacity:1; transform:none } }
+
+.jv-head{
+  display:flex; align-items:center; gap:10px; padding:14px 14px;
+  border-bottom:1px solid rgba(var(--acc-rgb),0.25);
+  background:radial-gradient(120% 100% at 0% 0%, rgba(var(--acc-rgb),0.16), transparent 60%);
+}
+.jv-ring{ width:34px; height:34px; border-radius:50%; position:relative; flex-shrink:0;
+  border:1.5px solid rgba(var(--acc-rgb),0.5); display:flex; align-items:center; justify-content:center; }
+.jv-ring::before{ content:''; position:absolute; inset:-5px; border-radius:50%;
+  border:1px solid rgba(var(--acc-rgb),0.28); border-top-color:var(--acc3); animation:jvSpin 2.4s linear infinite; }
+.jv-ring span{ width:8px; height:8px; border-radius:50%; background:var(--acc3); box-shadow:0 0 8px var(--acc3); animation:jvGlow 1.6s ease-in-out infinite; }
+@keyframes jvSpin{ to{ transform:rotate(360deg) } }
+@keyframes jvGlow{ 0%,100%{ opacity:0.55 } 50%{ opacity:1 } }
+.jv-title{ font-family:var(--mono); font-size:0.72rem; letter-spacing:0.1em; color:#fff; text-transform:uppercase }
+.jv-sub{ font-family:var(--mono); font-size:0.58rem; letter-spacing:0.08em; color:#3FD17E; margin-top:2px }
+.jv-headbtns{ margin-left:auto; display:flex; gap:6px }
+.jv-iconbtn{ width:26px; height:26px; border-radius:6px; border:1px solid rgba(255,255,255,0.14); background:rgba(255,255,255,0.04);
+  color:#cdd8e5; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px }
+.jv-iconbtn.active{ color:var(--acc3); border-color:rgba(var(--acc-rgb),0.5) }
+.jv-iconbtn:hover{ background:rgba(255,255,255,0.09) }
+
+.jv-body{ flex:1; overflow-y:auto; padding:14px; display:flex; flex-direction:column; gap:10px }
+.jv-body::-webkit-scrollbar{ width:4px }
+.jv-body::-webkit-scrollbar-thumb{ background:rgba(255,255,255,0.15); border-radius:2px }
+.jv-msg{ max-width:86%; font-size:0.78rem; line-height:1.55; padding:9px 12px; border-radius:10px; }
+.jv-msg.bot{ align-self:flex-start; background:rgba(255,255,255,0.06); color:#E6ECF2; border:1px solid rgba(255,255,255,0.08); border-bottom-left-radius:2px }
+.jv-msg.user{ align-self:flex-end; background:var(--acc2); color:#fff; border-bottom-right-radius:2px }
+.jv-chip-row{ display:flex; flex-wrap:wrap; gap:6px; margin-top:2px }
+.jv-chip{ font-family:var(--mono); font-size:0.6rem; letter-spacing:0.03em; color:#cdd8e5; background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.12); border-radius:20px; padding:5px 10px; cursor:pointer; }
+.jv-chip:hover{ border-color:var(--acc3); color:#fff }
+.jv-typing{ display:flex; gap:4px; padding:9px 12px }
+.jv-typing span{ width:5px; height:5px; border-radius:50%; background:#9fb2c4; animation:jvBlink 1.1s infinite }
+.jv-typing span:nth-child(2){ animation-delay:0.15s } .jv-typing span:nth-child(3){ animation-delay:0.3s }
+@keyframes jvBlink{ 0%,60%,100%{ opacity:0.25 } 30%{ opacity:1 } }
+
+.jv-foot{ padding:10px; border-top:1px solid rgba(255,255,255,0.08); display:flex; gap:7px; align-items:center; background:rgba(0,0,0,0.15) }
+.jv-input{ flex:1; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:8px;
+  color:#fff; padding:9px 11px; font-family:var(--sans); font-size:0.78rem; outline:none }
+.jv-input:focus{ border-color:var(--acc3) }
+.jv-input::placeholder{ color:#7d8ea1 }
+.jv-sendbtn{ width:34px; height:34px; border-radius:8px; border:none; background:var(--acc); color:#fff; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0 }
+.jv-sendbtn:hover{ background:var(--acc2) }
+
 </style>
 </head>
 <body>
+<div class="intro-ov" id="introOverlay">
+  <div class="intro-radar">
+    <div class="intro-rr r1"></div><div class="intro-rr r2"></div><div class="intro-rr r3"></div>
+    <div class="intro-core"><span></span></div>
+  </div>
+  <div class="intro-content">
+    <div class="intro-eyebrow">&#9679; A.I. &middot; Amit Intelligence &middot; your guide to this profile</div>
+    <h1 class="intro-headline" id="introHeadline"></h1>
+
+    <div class="intro-step" id="introStep1" style="display:none">
+      <p class="intro-sub" id="introQ"></p>
+      <div class="intro-chips" id="introPurposeChips">
+        <button class="intro-chip" onclick="introPurpose('hiring')">&#128188; I'm hiring / recruiting</button>
+        <button class="intro-chip" onclick="introPurpose('builder')">&#129302; Fellow builder, curious about the AI products</button>
+        <button class="intro-chip" onclick="introPurpose('explore')">&#128064; Just exploring</button>
+      </div>
+    </div>
+
+    <div class="intro-step" id="introStep2" style="display:none">
+      <p class="intro-sub" id="introReply"></p>
+      <div class="intro-navgrid" id="introNavGrid"></div>
+    </div>
+
+    <button class="intro-enter" onclick="introDismiss()">Skip straight to the site &rarr;</button>
+  </div>
+</div>
 <div class="vignette"></div>
 
 <div class="shell">
@@ -666,13 +785,6 @@ body::after {
     <span class="tb-section" id="tb-sec">Home</span>
   </div>
   <div class="tb-right">
-    <div class="theme-sw" id="themeSw">
-      <span class="theme-sw-lbl">Theme</span>
-      <button class="sw sw-bordeaux on" title="Bordeaux" aria-label="Bordeaux theme" onclick="setTheme('bordeaux',this)"></button>
-      <button class="sw sw-cobalt" title="Cobalt" aria-label="Cobalt theme" onclick="setTheme('cobalt',this)"></button>
-      <button class="sw sw-terracotta" title="Terracotta" aria-label="Terracotta theme" onclick="setTheme('terracotta',this)"></button>
-      <button class="sw sw-graphite" title="Graphite" aria-label="Graphite theme" onclick="setTheme('graphite',this)"></button>
-    </div>
     <div class="avail-pill"><div class="avail-pill-dot"></div>Available Immediately</div>
     <a href="https://linkedin.com/in/amitbhargav" target="_blank" rel="noopener" class="hire-btn">Hire Me</a>
   </div>
@@ -819,16 +931,16 @@ body::after {
       <div class="exp-row">
         <div class="el"><div class="el-per">Mar 2026 &ndash; Present</div><div class="el-dur">Current</div></div>
         <div class="er">
-          <div class="er-role">TPM Consultant &amp; AI Product Builder </div>
-          <div class="er-company"><span class="er-co">Independent</span></div>
-          <div class="er-ctx">AI-enabled multi-category discovery &amp; booking platform (Airbnb + Playo + co-working + venues) &middot; MVP &mdash; 48+ live listings &middot; concurrent GenAI product development</div>
+          <div class="er-role">Technical Program Manager &mdash; Applied AI/ML Skill-Building Initiative</div>
+          <div class="er-company"><span class="er-co">Independent</span><span class="er-type">Bangalore</span></div>
+          <div class="er-ctx">Deliberate, time-boxed initiative &mdash; built and shipped 2 GenAI products (Yuktora &amp; FirePathAI) solo, concept to production, to build hands-on AI/ML program fluency ahead of returning to a full-time TPM seat</div>
           <ul class="er-buls">
-            <li>Own end-to-end program delivery &mdash; scope, WBS, sprint governance, release readiness and milestone tracking across 31 commercial + 8 residential listing categories</li>
-            <li>Built the program operating model: RAID log, dependency mapping and executive KPI cadence (AI match quality, booking funnel, onboarding velocity, conversion)</li>
-            <li>Shipped <strong>Yuktora</strong> (GenAI job-search copilot) and <strong>FirePathAI</strong> (LLM-powered FIRE tool) as solo founder-PM &mdash; both live in production</li>
-            <li>Authored delivery playbooks, DoD standards and Agile coaching frameworks; advising early-stage startups</li>
+            <li>Owned end-to-end program delivery &mdash; scope, WBS, sprint governance, release readiness, and milestone tracking &mdash; for two GenAI products built solo from concept to live production</li>
+            <li>Built program operating model: RAID log, dependency mapping, and executive-style KPI tracking (model accuracy, user engagement, conversion) applied across both products</li>
+            <li>Shipped <strong>Yuktora</strong> (GenAI job-search copilot, Claude API) and <strong>FirePathAI</strong> (LLM-powered FIRE retirement tool) as solo founder-PM &mdash; both live in production</li>
+            <li>Converted this hands-on build experience into applied AI/ML program fluency &mdash; model evaluation literacy, prompt-architecture trade-offs, and LLM cost/latency governance &mdash; now brought back into TPM delivery</li>
           </ul>
-          <div class="er-tags"><span class="tag-green">Founder-PM</span><span class="tag">GenAI</span><span class="tag">Program Delivery</span><span class="tag-blue">Advisory</span></div>
+          <div class="er-tags"><span class="tag-green">Founder-PM</span><span class="tag">GenAI</span><span class="tag">Program Delivery</span><span class="tag-blue">AI/ML Fluency</span></div>
         </div>
       </div>
 
@@ -869,12 +981,12 @@ body::after {
         <div class="er">
           <div class="er-role">Engineering Delivery Lead &amp; Acting Scrum Master</div>
           <div class="er-company"><span class="er-co">Klaus IT Solutions</span><span class="er-type">Client: Resideo Technologies</span></div>
-          <div class="er-ctx">Healthcare Data Analytics &amp; AI Platform &mdash; 100,000+ patient records &middot; chronic-disease monitoring &amp; clinical decision support</div>
+          <div class="er-ctx">Home Automation &mdash; Connected Devices: Thermostats, Security Hubs, Mobile App &amp; Firmware (Resideo, spun off from Honeywell)</div>
           <ul class="er-buls">
-            <li>Managed delivery for a <strong>10-member cross-functional Agile team</strong>; improved release quality 30% and cut defect leakage <strong>15% &rarr; 8%</strong> via structured RCA and defect governance</li>
-            <li>Partnered with data engineers on AI/ML clinical-decision-support integration, UAT coordination and production rollout governance</li>
+            <li>Led delivery for a <strong>10-member cross-functional Agile team</strong> building automation test frameworks across Resideo's connected device portfolio &mdash; thermostats, security hubs, mobile app, firmware; improved release quality 30%, reduced defect leakage <strong>15% &rarr; 8%</strong></li>
+            <li>Partnered with firmware and mobile engineers on device-level automation framework development, UAT coordination, and production rollout governance</li>
           </ul>
-          <div class="er-tags"><span class="tag-green">Healthcare AI</span><span class="tag">100K+ Records</span><span class="tag">Scrum Master</span></div>
+          <div class="er-tags"><span class="tag-green">IoT / Firmware</span><span class="tag">Connected Devices</span><span class="tag">Scrum Master</span></div>
         </div>
       </div>
 
@@ -995,9 +1107,16 @@ body::after {
     <h2 class="h-display rv" style="--d:1;margin-bottom:28px">Certifications &amp;<br><em>Education.</em></h2>
     <div class="cert-grid rv" style="--d:2">
       <div class="cert"><span class="cert-ic">&#127941;</span><div class="cert-nm">SAFe&reg; 6 Product Owner / Product Manager</div><div class="cert-org">Scaled Agile, Inc.</div><div class="cert-dt">Issued Jun 2023 &middot; Credential #69214631</div></div>
+      <div class="cert"><span class="cert-ic">&#129302;</span><div class="cert-nm">Generative AI for Project Managers</div><div class="cert-org">PMI</div><div class="cert-dt">Credentialed</div></div>
+      <div class="cert"><span class="cert-ic">&#129302;</span><div class="cert-nm">Generative AI Overview for Project Managers</div><div class="cert-org">Project Management Institute</div><div class="cert-dt">Issued Jun 2026</div></div>
       <div class="cert"><span class="cert-ic">&#127891;</span><div class="cert-nm">Product Management in AI/ML Solutions</div><div class="cert-org">AI/ML Specialisation</div><div class="cert-dt">Issued Dec 2021</div></div>
-      <div class="cert"><span class="cert-prog">In Progress</span><span class="cert-ic">&#128221;</span><div class="cert-nm">PMP &mdash; Project Management Professional</div><div class="cert-org">PMI</div><div class="cert-dt">Target Q3 2026</div></div>
-      <div class="cert"><span class="cert-ic">&#129302;</span><div class="cert-nm">AI Product Builder &mdash; 2 Live Products</div><div class="cert-org">Claude API &middot; Anthropic</div><div class="cert-dt">2025&ndash;2026 &middot; FirePathAI &amp; Yuktora</div></div>
+      <div class="cert"><span class="cert-ic">&#9989;</span><div class="cert-nm">Google AI Essentials</div><div class="cert-org">Google &middot; Coursera</div><div class="cert-dt">Issued Jun 2026 &middot; Credential #7TI4O948DL3I</div></div>
+      <div class="cert"><span class="cert-ic">&#128260;</span><div class="cert-nm">Agile Scrum Master</div><div class="cert-org">&mdash;</div><div class="cert-dt">Credentialed</div></div>
+      <div class="cert"><span class="cert-ic">&#9889;</span><div class="cert-nm">The AI-Driven Project Manager: 10X Your Productivity with Generative AI</div><div class="cert-org">LinkedIn Learning</div><div class="cert-dt">Issued Jul 2026</div></div>
+      <div class="cert"><span class="cert-ic">&#128737;</span><div class="cert-nm">Project Management Foundations: Risk Management</div><div class="cert-org">LinkedIn Learning</div><div class="cert-dt">Issued Jul 2026</div></div>
+      <div class="cert"><span class="cert-ic">&#129302;</span><div class="cert-nm">AI Product Builder &mdash; 2 Live Products</div><div class="cert-org">Claude API &middot; Anthropic (self-directed)</div><div class="cert-dt">2025&ndash;2026 &middot; FirePathAI &amp; Yuktora</div></div>
+      <div class="cert"><span class="cert-prog">In Progress</span><span class="cert-ic">&#128221;</span><div class="cert-nm">CSM &mdash; Certified ScrumMaster</div><div class="cert-org">Scrum Alliance</div><div class="cert-dt">Target Q4 2026</div></div>
+      <div class="cert"><span class="cert-prog">In Progress</span><span class="cert-ic">&#128221;</span><div class="cert-nm">PMP &mdash; Project Management Professional</div><div class="cert-org">PMI</div><div class="cert-dt">Target Q4 2026</div></div>
     </div>
     <div class="sec-label rv" style="--d:3;margin-bottom:14px">Education</div>
     <div class="edu-grid rv" style="--d:4">
@@ -1038,14 +1157,32 @@ body::after {
 </main>
 </div>
 
+<!-- == A.I. — AMIT INTELLIGENCE ================ -->
+<button class="jv-launcher" id="jvLauncher" aria-label="Open AI assistant" onclick="jvToggle()">
+  <div class="jv-dot"></div>
+  <svg viewBox="0 0 24 24"><path d="M12 1.5c.4 0 .76.27.87.66l1.28 4.6a4.9 4.9 0 003.4 3.4l4.6 1.28c.39.11.66.47.66.87s-.27.76-.66.87l-4.6 1.28a4.9 4.9 0 00-3.4 3.4l-1.28 4.6a.9.9 0 01-1.74 0l-1.28-4.6a4.9 4.9 0 00-3.4-3.4l-4.6-1.28a.9.9 0 010-1.74l4.6-1.28a4.9 4.9 0 003.4-3.4l1.28-4.6c.11-.39.47-.66.87-.66z"/><path d="M19 2.2c.22 0 .4.14.46.35l.4 1.42c.15.53.56.94 1.1 1.09l1.42.4a.48.48 0 010 .92l-1.42.4a1.53 1.53 0 00-1.1 1.1l-.4 1.42a.48.48 0 01-.92 0l-.4-1.42a1.53 1.53 0 00-1.1-1.1l-1.42-.4a.48.48 0 010-.92l1.42-.4a1.53 1.53 0 001.1-1.1l.4-1.42c.06-.2.24-.34.46-.34z"/></svg>
+</button>
+
+<div class="jv-panel" id="jvPanel" role="dialog" aria-label="A.I. — Amit Intelligence assistant">
+  <div class="jv-head">
+    <div class="jv-ring"><span></span></div>
+    <div>
+      <div class="jv-title">A.I.</div>
+      <div class="jv-sub">Amit Intelligence &middot; &#9679; ready</div>
+    </div>
+    <div class="jv-headbtns">
+      <button class="jv-iconbtn" title="Close" onclick="jvToggle(false)">&#10005;</button>
+    </div>
+  </div>
+  <div class="jv-body" id="jvBody"></div>
+  <div class="jv-foot">
+    <input class="jv-input" id="jvInput" type="text" placeholder="Ask about experience, AI products, certs..." onkeydown="if(event.key==='Enter')jvSend()">
+    <button class="jv-sendbtn" title="Send" onclick="jvSend()">&#10148;</button>
+  </div>
+</div>
+
 <script>
 const LABELS = {home:'Home',products:'Products',experience:'Experience',approach:'Approach',skills:'Skills',certs:'Credentials',contact:'Contact'};
-
-function setTheme(t, el){
-  document.documentElement.setAttribute('data-theme', t);
-  document.querySelectorAll('.sw').forEach(s => s.classList.remove('on'));
-  if (el) el.classList.add('on');
-}
 
 function countUp(el){
   const target = parseFloat(el.dataset.target);
@@ -1090,6 +1227,165 @@ document.addEventListener('keydown', e => {
 
 // initial load
 window.addEventListener('load', runKpis);
+
+/* ============================================
+   A.I. (Amit Intelligence) — client-side chat assistant
+   No backend / API key: keyword-matched knowledge
+   base + typing animation. Text-only, works everywhere.
+============================================ */
+const JV_KB = [
+  { k:['budget','money','cost','$5m','million'], a:"Ooh, love this one — $5M+ managed across Fixed-Bid and T&M contracts at TCS (Randstad & Texas Instruments), plus a $2M+ AI/ML platform at InspironLabs. Zero critical overruns too! 💰" },
+  { k:['team','engineer','people','size','manage'], a:"He's led cross-functional, multi-geo teams of 50+ engineers across India, US and Europe — plus vendor and subcontractor teams on the TCS cybersecurity portfolio. Big rooms, tight coordination!" },
+  { k:['experience','years','background','career'], a:"13+ years and counting! Cybersecurity → SaaS → cloud → and now AI/ML platforms. The journey: Unisys → Abaqus → Klaus IT → TCS → InspironLabs → now building AI products solo. Quite a ride." },
+  { k:['ai product','yuktora','firepath','genai','built','shipped','founder'], a:"This is my favourite topic! 🚀 Amit's a founder-PM of two live GenAI products on the Claude API — Yuktora (a job-search co-pilot that catches ATS gaps) and FirePathAI (an India-focused FIRE retirement planner). Both shipped, both live, both monetised!" },
+  { k:['cert','safe','pmp','credential','qualif'], a:"He's been on a real certification streak lately! 9 completed — SAFe® 6 PO/PM, two PMI Generative AI credentials, Google AI Essentials, Agile Scrum Master, Product Management in AI/ML, and two fresh LinkedIn Learning courses — plus PMP and CSM in progress for Q4 2026. Check the Credentials tab for the full haul." },
+  { k:['current','role','doing now','today','present'], a:"Right now he's deep in a hands-on AI/ML skill-building sprint — shipped two GenAI products solo end-to-end (Yuktora & FirePathAI) while gearing up to jump back into a full-time TPM seat. Busy season!" },
+  { k:['education','degree','mba','university','college'], a:"MBA in Information Technology (Sikkim Manipal University) and a BE in Computer Science (VTU)." },
+  { k:['cyber','security','iam','sailpoint'], a:"Solid cyber chops — at TCS he delivered 8 concurrent cybersecurity platforms (SailPoint IAM, Active Directory, LDAP, WSSO, Vulnerability Management) for Randstad and Texas Instruments. 100% audit compliance, zero critical findings. Clean record!" },
+  { k:['contact','email','phone','reach','hire','available','notice'], a:"He's immediately available and pretty easy to reach! Based in Bengaluru, open to remote/hybrid and international roles with visa sponsorship. Fastest route: amitbhargav.sunny@gmail.com or LinkedIn — one-click links on the Contact tab. Go say hi! 👋" },
+  { k:['location','based','bangalore','bengaluru','remote'], a:"Based in Bengaluru — but flexible! Open to Mumbai, Hyderabad, Pune, remote/hybrid, or international relocation with visa sponsorship." },
+  { k:['skill','tool','stack','tech'], a:"Great question — the stack's pretty broad: Jira, Azure DevOps, MS Project, Power BI for delivery; Claude API, OpenAI, LangChain, AWS/Azure/GCP for AI/ML; Jenkins, Selenium, Postman for CI/CD & QA. Full breakdown on the Skills tab!" },
+  { k:['agile','safe','scrum','methodology'], a:"Agile/SAFe 6 is home turf, with Waterfall and hybrid SDLC in the mix too — run across both Fixed-Bid and T&M commercial setups." },
+  { k:['who are you','what are you','jarvis','your name'], a:"I'm A.I. — short for Amit Intelligence! A little chat assistant built right into this page. No external AI calls, just a fast way to explore Amit's experience without endless scrolling. Ask me about budgets, AI products, certs, or how to reach him — I'm genuinely curious what you want to know!" }
+];
+const JV_DEFAULT = "Hmm, don't have a ready answer for that one yet! Try asking about budgets, team size, AI products (Yuktora/FirePathAI), certifications, his current role, or how to reach him. For anything deeper, the LinkedIn and email links in Contact will get you straight to Amit — he loves these conversations!";
+let jvOpened = false;
+
+function jvToggle(force){
+  const p = document.getElementById('jvPanel');
+  const open = force !== undefined ? force : !p.classList.contains('on');
+  p.classList.toggle('on', open);
+  if (open && !jvOpened){
+    jvOpened = true;
+    jvAddMsg("Hey there! 👋 I'm A.I. — Amit Intelligence — genuinely excited you're here! Ask me anything about Amit's experience, AI products, or how to reach him.", 'bot', true);
+    jvChips(['AI products built?','Budgets managed?','Certifications?','Current role?']);
+  }
+}
+function jvChips(list){
+  const body = document.getElementById('jvBody');
+  const row = document.createElement('div');
+  row.className = 'jv-chip-row';
+  list.forEach(q => {
+    const c = document.createElement('button');
+    c.className = 'jv-chip'; c.textContent = q;
+    c.onclick = () => { document.getElementById('jvInput').value = q; jvSend(); };
+    row.appendChild(c);
+  });
+  body.appendChild(row);
+  body.scrollTop = body.scrollHeight;
+}
+function jvAddMsg(text, who, animate){
+  const body = document.getElementById('jvBody');
+  const m = document.createElement('div');
+  m.className = 'jv-msg ' + who;
+  body.appendChild(m);
+  body.scrollTop = body.scrollHeight;
+  if (!animate){ m.textContent = text; return; }
+  let i = 0;
+  const iv = setInterval(() => {
+    m.textContent = text.slice(0, i++);
+    body.scrollTop = body.scrollHeight;
+    if (i > text.length) clearInterval(iv);
+  }, 12);
+}
+function jvAnswer(q){
+  const s = q.toLowerCase();
+  for (const row of JV_KB){ if (row.k.some(k => s.includes(k))) return row.a; }
+  return JV_DEFAULT;
+}
+function jvSend(){
+  const input = document.getElementById('jvInput');
+  const q = input.value.trim();
+  if (!q) return;
+  jvAddMsg(q, 'user');
+  input.value = '';
+  const body = document.getElementById('jvBody');
+  const typing = document.createElement('div');
+  typing.className = 'jv-msg bot jv-typing';
+  typing.innerHTML = '<span></span><span></span><span></span>';
+  body.appendChild(typing);
+  body.scrollTop = body.scrollHeight;
+  setTimeout(() => {
+    typing.remove();
+    jvAddMsg(jvAnswer(q), 'bot', true);
+  }, 500 + Math.random()*400);
+}
+
+/* ============================================
+   ONBOARDING INTRO — A.I. greets visitors with a
+   short back-and-forth before the dashboard,
+   shown once per browser session.
+============================================ */
+const INTRO_NAV = [
+  {id:'home', ic:'&#8962;', label:'Home'},
+  {id:'products', ic:'&#128142;', label:'AI Products'},
+  {id:'experience', ic:'&#9719;', label:'Experience'},
+  {id:'approach', ic:'&#9678;', label:'Approach'},
+  {id:'skills', ic:'&#9737;', label:'Skills'},
+  {id:'certs', ic:'&#127941;', label:'Credentials'},
+  {id:'contact', ic:'&#9993;', label:'Contact'}
+];
+const INTRO_REPLIES = {
+  hiring:  {text:"Perfect — let's get you the highlights fast. Here's the full map, but Experience and Credentials are your fastest read:", rec:['experience','certs','contact']},
+  builder: {text:"Ooh, a fellow builder — you'll want Products first. Here's everything, jump wherever:", rec:['products','skills']},
+  explore: {text:"Take your time! Here's the full site map — go wherever curiosity takes you:", rec:[]}
+};
+
+function introGoto(panelId){
+  const ov = document.getElementById('introOverlay');
+  ov.classList.add('out');
+  sessionStorage.setItem('ai_intro_seen', '1');
+  setTimeout(() => { ov.style.display = 'none'; }, 500);
+  const idx = Object.keys(LABELS).indexOf(panelId);
+  show(panelId, document.querySelectorAll('.nav-btn')[idx]);
+}
+function introDismiss(){ introGoto('home'); }
+
+function introType(el, text, cb){
+  let i = 0;
+  el.textContent = '';
+  const iv = setInterval(() => {
+    el.textContent = text.slice(0, i++);
+    if (i > text.length){ clearInterval(iv); if (cb) cb(); }
+  }, 28);
+}
+function introPurpose(kind){
+  document.getElementById('introStep1').style.display = 'none';
+  const step2 = document.getElementById('introStep2');
+  step2.style.display = '';
+  const r = INTRO_REPLIES[kind];
+  introType(document.getElementById('introReply'), r.text, () => {
+    const grid = document.getElementById('introNavGrid');
+    grid.innerHTML = '';
+    INTRO_NAV.forEach(n => {
+      const b = document.createElement('button');
+      b.className = 'intro-navbtn' + (r.rec.includes(n.id) ? ' rec' : '');
+      b.innerHTML = '<span class="ic">' + n.ic + '</span>' + n.label;
+      b.onclick = () => introGoto(n.id);
+      grid.appendChild(b);
+    });
+  });
+}
+(function initIntro(){
+  if (sessionStorage.getItem('ai_intro_seen')){
+    const ov = document.getElementById('introOverlay');
+    if (ov) ov.style.display = 'none';
+    return;
+  }
+  const headline = document.getElementById('introHeadline');
+  if (!headline) return;
+  introType(headline, "Hi! I'm A.I. — Amit Intelligence 👋", () => {
+    const step1 = document.getElementById('introStep1');
+    step1.style.display = '';
+    introType(document.getElementById('introQ'), "So — what brings you by today?");
+  });
+})();
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape'){
+    const ov = document.getElementById('introOverlay');
+    if (ov && ov.style.display !== 'none' && !ov.classList.contains('out')) introDismiss();
+  }
+});
 </script>
 </body>
 </html>
